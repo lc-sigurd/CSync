@@ -6,7 +6,7 @@ namespace CSync.Util;
 /// <summary>
 /// Contains helpful extension methods to aid with synchronization and reduce code duplication.
 /// </summary>
-public static class Extensions {
+public static class SyncedBindingExtensions {
     /// <summary>
     /// Binds an entry to this file and returns the converted synced entry.
     /// </summary>
