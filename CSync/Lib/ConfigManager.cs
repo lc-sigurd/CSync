@@ -42,7 +42,7 @@ public class ConfigManager {
             return;
         }
 
-        config.InitInstance(config);
+        //config.InitInstance(config);
         Instances.Add(guid, config);
     }
 
