@@ -5,7 +5,7 @@ using Unity.Netcode;
 
 namespace CSync.Lib;
 
-internal struct SyncedConfigDefinition : INetworkSerializable, System.IEquatable<SyncedConfigDefinition>
+internal struct SyncedConfigDefinition : INetworkSerializable, IEquatable<SyncedConfigDefinition>
 {
     public FixedString128Bytes Section;
     public FixedString128Bytes Key;
