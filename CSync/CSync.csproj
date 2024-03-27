@@ -43,7 +43,7 @@
     <ItemGroup>
         <ThunderstoreBuildCopyPath Include="$(TargetPath)" Destination="BepInEx/plugins/$(ProjectName)/"/>
     </ItemGroup>
-    
+
     <ItemGroup>
         <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all"/>
         <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" PrivateAssets="all"/>
@@ -65,8 +65,8 @@
             <HintPath>$(LethalCompanyDir)Lethal Company_Data\Managed\Unity.Netcode.Runtime.dll</HintPath>
         </Reference>
     </ItemGroup>
-    
-    <ItemGroup Condition="'$(CI)' == 'true'">
+
+    <ItemGroup Condition="'$(CI)' == 'true' or $(UseGameLibs) == 'true'">
         <PackageReference Include="LethalCompany.GameLibs.Steam" Version="49.0.0-alpha.1" />
     </ItemGroup>
 </Project>
