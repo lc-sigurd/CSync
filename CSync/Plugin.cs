@@ -16,7 +16,7 @@ namespace CSync;
 public class Plugin : BaseUnityPlugin {
     internal new static ManualLogSource Logger { get; private set; } = null!;
 
-    Harmony Patcher;
+    internal static Harmony Patcher = null!;
 
     private void Awake() {
         Logger = base.Logger;
