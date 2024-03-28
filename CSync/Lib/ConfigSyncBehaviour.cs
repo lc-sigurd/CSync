@@ -15,7 +15,7 @@ public class ConfigSyncBehaviour : NetworkBehaviour
     private ISyncedConfig? Config {
         get {
             var success = ConfigManager.Instances.TryGetValue(ConfigGuid, out var config);
-            return config ?? null;
+            return success ? config : null;
         }
     }
 
