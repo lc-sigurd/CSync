@@ -1,11 +1,10 @@
 using System;
-using BepInEx.Configuration;
 using Unity.Collections;
 using Unity.Netcode;
 
 namespace CSync.Lib;
 
-internal struct SyncedConfigDefinition : INetworkSerializable, IEquatable<SyncedConfigDefinition>
+public struct SyncedConfigDefinition : INetworkSerializable, IEquatable<SyncedConfigDefinition>
 {
     public FixedString128Bytes Section;
     public FixedString128Bytes Key;
@@ -14,11 +13,6 @@ internal struct SyncedConfigDefinition : INetworkSerializable, IEquatable<Synced
     {
         Section = section;
         Key = key;
-    }
-
-    public readonly ConfigDefinition ToConfigDefinition()
-    {
-        return new ConfigDefinition(Section.Value, Key.Value);
     }
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
