@@ -7,12 +7,12 @@ namespace CSync.Lib;
 internal struct SyncedEntryDelta : INetworkSerializable, IEquatable<SyncedEntryDelta>
 {
     public SyncedConfigDefinition Definition;
-    public FixedString128Bytes ConfigFileName;
+    public FixedString128Bytes ConfigFileRelativePath;
     public FixedString512Bytes SerializedValue;
 
-    public SyncedEntryDelta(FixedString128Bytes configFileName, SyncedConfigDefinition definition, FixedString512Bytes serializedValue)
+    public SyncedEntryDelta(FixedString128Bytes configFileRelativePath, SyncedConfigDefinition definition, FixedString512Bytes serializedValue)
     {
-        ConfigFileName = configFileName;
+        ConfigFileRelativePath = configFileRelativePath;
         Definition = definition;
         SerializedValue = serializedValue;
     }
@@ -24,7 +24,7 @@ internal struct SyncedEntryDelta : INetworkSerializable, IEquatable<SyncedEntryD
             serializer.SerializeValue(ref Definition);
 
             var reader = serializer.GetFastBufferReader();
-            reader.ReadValueSafe(out ConfigFileName);
+            reader.ReadValueSafe(out ConfigFileRelativePath);
             reader.ReadValueSafe(out SerializedValue);
         }
         else
@@ -32,14 +32,14 @@ internal struct SyncedEntryDelta : INetworkSerializable, IEquatable<SyncedEntryD
             serializer.SerializeValue(ref Definition);
 
             var writer = serializer.GetFastBufferWriter();
-            writer.WriteValueSafe(ConfigFileName);
+            writer.WriteValueSafe(ConfigFileRelativePath);
             writer.WriteValueSafe(SerializedValue);
         }
     }
 
     public bool Equals(SyncedEntryDelta other)
     {
-        return Definition.Equals(other.Definition) && ConfigFileName.Equals(other.ConfigFileName) && SerializedValue.Equals(other.SerializedValue);
+        return Definition.Equals(other.Definition) && ConfigFileRelativePath.Equals(other.ConfigFileRelativePath) && SerializedValue.Equals(other.SerializedValue);
     }
 
     public override bool Equals(object? obj)
@@ -49,6 +49,6 @@ internal struct SyncedEntryDelta : INetworkSerializable, IEquatable<SyncedEntryD
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Definition, ConfigFileName, SerializedValue);
+        return HashCode.Combine(Definition, ConfigFileRelativePath, SerializedValue);
     }
 }
