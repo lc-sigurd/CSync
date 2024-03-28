@@ -7,6 +7,12 @@
       "commands": [
         "tcli"
       ]
+    },
+    "evaisa.netcodepatcher.cli": {
+      "version": "4.1.0",
+      "commands": [
+        "netcode-patch"
+      ]
     }
   }
 }
