@@ -79,6 +79,6 @@ public class ConfigManager {
         }
 
         var syncBehaviour = Prefab.AddComponent<ConfigSyncBehaviour>();
-        syncBehaviour.Config = config;
+        syncBehaviour.ConfigGuid = config.GUID;
     }
 }

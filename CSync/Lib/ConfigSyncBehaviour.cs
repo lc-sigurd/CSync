@@ -9,8 +9,15 @@ namespace CSync.Lib;
 
 public class ConfigSyncBehaviour : NetworkBehaviour
 {
-    [SerializeField]
-    internal ISyncedConfig? Config;
+    [field: SerializeField]
+    public string ConfigGuid { get; internal set; }
+
+    private ISyncedConfig? Config {
+        get {
+            var success = ConfigManager.Instances.TryGetValue(ConfigGuid, out var config);
+            return config ?? null;
+        }
+    }
 
     private ISyncedEntryContainer? _entryContainer;
     internal ISyncedEntryContainer? EntryContainer => _entryContainer ??= Config?.EntryContainer;
