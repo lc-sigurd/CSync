@@ -50,6 +50,7 @@ public static class SyncedBindingExtensions {
         V defaultValue,
         ConfigDescription? description = null
     ) {
+        ConfigManager.AddToFileCache(configFile);
         return configFile.Bind(definition, defaultValue, description).ToSyncedEntry();
     }
 
