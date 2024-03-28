@@ -1,4 +1,11 @@
 using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using CSync.Util;
+using HarmonyLib;
+using JetBrains.Annotations;
 
 namespace CSync.Lib;
 
@@ -6,50 +13,54 @@ namespace CSync.Lib;
 /// Wrapper class allowing the config class (type parameter) to be synchronized.<br></br>
 /// Stores the mod's unique identifier and handles registering and sending of named messages.
 /// </summary>
-public class SyncedConfig<T>(string guid) : ISynchronizable where T : class
+public class SyncedConfig<T> : ISyncedConfig where T : SyncedConfig<T>
 {
-    static void LogErr(string str) => Plugin.Logger.LogError(str);
-    static void LogDebug(string str) => Plugin.Logger.LogDebug(str);
+    public ISyncedEntryContainer EntryContainer { get; } = new SyncedEntryContainer();
 
-    /// <summary>
-    /// Invoked on the host when a client requests to sync.
-    /// </summary>
-    public event EventHandler? SyncRequested;
-    internal void OnSyncRequested() => SyncRequested?.Invoke(this, EventArgs.Empty);
+    static SyncedConfig()
+    {
+        var constructors = AccessTools.GetDeclaredConstructors(typeof(T));
 
-    /// <summary>
-    /// Invoked on the client when they receive the host config.
-    /// </summary>
-    public event EventHandler? SyncReceived;
-    internal void OnSyncReceived() => SyncReceived?.Invoke(this, EventArgs.Empty);
+        ConstructorInfo constructor;
+        try
+        {
+            constructor = constructors.Single();
+        }
+        catch (InvalidOperationException exc)
+        {
+            throw new InvalidOperationException($"{typeof(T).Name} declares {constructors.Count} constructors. SyncedConfig subclasses must declare exactly one constructor.", exc);
+        }
+
+        Plugin.Patcher.Patch(constructor, postfix: new HarmonyMethod(AccessTools.Method(typeof(SyncedConfig<T>), nameof(PostConstructor))));
+    }
+
+    [HarmonyPostfix]
+    [UsedImplicitly]
+    static void PostConstructor(T __instance)
+    {
+        __instance.PopulateEntryContainer();
+    }
+
+    public SyncedConfig(string guid)
+    {
+        GUID = guid;
+    }
 
     /// <summary>
     /// The mod name or abbreviation. After being given to the constructor, it cannot be changed.
     /// </summary>
-    public readonly string GUID = guid;
+    public string GUID { get; }
 
-    internal SyncedEntry<bool> SYNC_TO_CLIENTS { get; private set; } = null;
-
-    /// <summary>
-    /// Allow the host to control whether clients can use their own config.
-    /// This MUST be called after binding the entry parameter.
-    /// </summary>
-    /// <param name="hostSyncControlOption">The entry for the host to use in your config file.</param>
-    protected void EnableHostSyncControl(SyncedEntry<bool> hostSyncControlOption) {
-        SYNC_TO_CLIENTS = hostSyncControlOption;
-
-        hostSyncControlOption.SettingChanged += (object sender, EventArgs e) => {
-            SYNC_TO_CLIENTS = hostSyncControlOption;
-        };
-    }
-
-    public void SetupSync()
+    private void PopulateEntryContainer()
     {
-        throw new NotImplementedException();
-    }
+        var fields = AccessTools.GetDeclaredFields(typeof(T))
+            .Where(field => field.GetCustomAttribute<DataMemberAttribute>() is not null)
+            .Where(field => typeof(SyncedEntryBase).IsAssignableFrom(field.FieldType));
 
-    public void RevertSync()
-    {
-        throw new NotImplementedException();
+        foreach (var fieldInfo in fields)
+        {
+            var entryBase = (SyncedEntryBase)fieldInfo.GetValue(this);
+            EntryContainer.Add(entryBase.BoxedEntry.ToSyncedEntryIdentifier(), entryBase);
+        }
     }
 }
