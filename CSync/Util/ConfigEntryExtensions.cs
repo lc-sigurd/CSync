@@ -5,8 +5,9 @@ namespace CSync.Util;
 
 internal static class ConfigEntryExtensions
 {
-    internal static SyncedConfigDefinition ToSynced(this ConfigDefinition definition)
+    public static (string ConfigFileRelativePath, SyncedConfigDefinition Definition) ToSyncedEntryIdentifier(
+        this ConfigEntryBase entry)
     {
-        return new(definition.Section, definition.Key);
+        return (entry.ConfigFile.GetConfigFileRelativePath(), entry.Definition.ToSynced());
     }
 }
