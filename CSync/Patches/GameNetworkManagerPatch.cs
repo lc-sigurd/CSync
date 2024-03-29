@@ -19,4 +19,3 @@ public static class GameNetworkManagerPatch
         NetworkManager.Singleton.AddNetworkPrefab(ConfigManager.Prefab);
     }
 }
-
