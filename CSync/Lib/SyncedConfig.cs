@@ -3,7 +3,6 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using CSync.Extensions;
-using CSync.Util;
 using HarmonyLib;
 using JetBrains.Annotations;
 

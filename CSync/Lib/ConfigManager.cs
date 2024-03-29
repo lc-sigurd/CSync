@@ -6,7 +6,6 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using CSync.Extensions;
-using CSync.Util;
 using Unity.Netcode;
 using UnityEngine;
 
