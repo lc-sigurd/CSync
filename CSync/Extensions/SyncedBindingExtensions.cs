@@ -15,39 +15,39 @@ public static class SyncedBindingExtensions {
     /// <param name="key">The name/identifier of this entry.</param>
     /// <param name="defaultVal">The value assigned to this entry if not changed.</param>
     /// <param name="description">The description indicating what this entry does.</param>
-    public static SyncedEntry<V> BindSyncedEntry<V>(
+    public static SyncedEntry<T> BindSyncedEntry<T>(
         this ConfigFile configFile,
         string section,
         string key,
-        V defaultVal,
+        T defaultVal,
         string description
     ) {
         return configFile.BindSyncedEntry(new ConfigDefinition(section, key), defaultVal, new ConfigDescription(description));
     }
 
-    public static SyncedEntry<V> BindSyncedEntry<V>(
+    public static SyncedEntry<T> BindSyncedEntry<T>(
         this ConfigFile configFile,
         string section,
         string key,
-        V defaultValue,
+        T defaultValue,
         ConfigDescription? desc = null
     ) {
         return configFile.BindSyncedEntry(new ConfigDefinition(section, key), defaultValue, desc);
     }
 
-    public static SyncedEntry<V> BindSyncedEntry<V>(
+    public static SyncedEntry<T> BindSyncedEntry<T>(
         this ConfigFile configFile,
         ConfigDefinition definition,
-        V defaultValue,
+        T defaultValue,
         string description
     ) {
         return configFile.BindSyncedEntry(definition, defaultValue, new ConfigDescription(description));
     }
 
-    public static SyncedEntry<V> BindSyncedEntry<V>(
+    public static SyncedEntry<T> BindSyncedEntry<T>(
         this ConfigFile configFile,
         ConfigDefinition definition,
-        V defaultValue,
+        T defaultValue,
         ConfigDescription? description = null
     ) {
         ConfigManager.AddToFileCache(configFile);
@@ -57,7 +57,7 @@ public static class SyncedBindingExtensions {
     /// <summary>
     /// Converts this entry into a serializable alternative, allowing it to be synced.
     /// </summary>
-    public static SyncedEntry<V> ToSyncedEntry<V>(this ConfigEntry<V> entry) {
-        return new SyncedEntry<V>(entry);
+    public static SyncedEntry<T> ToSyncedEntry<T>(this ConfigEntry<T> entry) {
+        return new SyncedEntry<T>(entry);
     }
 }
