@@ -1,5 +1,6 @@
 using System;
 using BepInEx.Configuration;
+using CSync.Extensions;
 using CSync.Lib;
 
 namespace CSync.Util;
@@ -7,7 +8,7 @@ namespace CSync.Util;
 /// <summary>
 /// Contains helpful extension methods to aid with synchronization and reduce code duplication.
 /// </summary>
-[Obsolete]
+[Obsolete($"Use {nameof(SyncedBindingExtensions)} instead.")]
 public static class Extensions {
     /// <summary>
     /// Binds an entry to this file and returns the converted synced entry.
@@ -17,7 +18,7 @@ public static class Extensions {
     /// <param name="key">The name/identifier of this entry.</param>
     /// <param name="defaultValue">The value assigned to this entry if not changed.</param>
     /// <param name="description">The description indicating what this entry does.</param>
-    private static SyncedEntry<T> BindSyncedEntry<T>(
+    public static SyncedEntry<T> BindSyncedEntry<T>(
         this ConfigFile configFile,
         string section,
         string key,
@@ -33,7 +34,7 @@ public static class Extensions {
         );
     }
 
-    private static SyncedEntry<T> BindSyncedEntry<T>(
+    public static SyncedEntry<T> BindSyncedEntry<T>(
         this ConfigFile configFile,
         string section,
         string key,
@@ -49,7 +50,7 @@ public static class Extensions {
         );
     }
 
-    private static SyncedEntry<T> BindSyncedEntry<T>(
+    public static SyncedEntry<T> BindSyncedEntry<T>(
         this ConfigFile configFile,
         ConfigDefinition definition,
         T defaultValue,
@@ -63,7 +64,7 @@ public static class Extensions {
         );
     }
 
-    private static SyncedEntry<T> BindSyncedEntry<T>(
+    public static SyncedEntry<T> BindSyncedEntry<T>(
         this ConfigFile configFile,
         ConfigDefinition definition,
         T defaultValue,
@@ -80,7 +81,7 @@ public static class Extensions {
     /// <summary>
     /// Converts this entry into a serializable alternative, allowing it to be synced.
     /// </summary>
-    private static SyncedEntry<T> ToSyncedEntry<T>(this ConfigEntry<T> entry)
+    public static SyncedEntry<T> ToSyncedEntry<T>(this ConfigEntry<T> entry)
     {
         return SyncedBindingExtensions.ToSyncedEntry(entry);
     }
