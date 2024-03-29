@@ -18,6 +18,7 @@ public static class Extensions {
     /// <param name="key">The name/identifier of this entry.</param>
     /// <param name="defaultValue">The value assigned to this entry if not changed.</param>
     /// <param name="description">The description indicating what this entry does.</param>
+    [Obsolete($"Use {nameof(SyncedBindingExtensions)} instead.")]
     public static SyncedEntry<T> BindSyncedEntry<T>(
         this ConfigFile configFile,
         string section,
@@ -34,6 +35,7 @@ public static class Extensions {
         );
     }
 
+    [Obsolete($"Use {nameof(SyncedBindingExtensions)} instead.")]
     public static SyncedEntry<T> BindSyncedEntry<T>(
         this ConfigFile configFile,
         string section,
@@ -50,6 +52,7 @@ public static class Extensions {
         );
     }
 
+    [Obsolete($"Use {nameof(SyncedBindingExtensions)} instead.")]
     public static SyncedEntry<T> BindSyncedEntry<T>(
         this ConfigFile configFile,
         ConfigDefinition definition,
@@ -64,6 +67,7 @@ public static class Extensions {
         );
     }
 
+    [Obsolete($"Use {nameof(SyncedBindingExtensions)} instead.")]
     public static SyncedEntry<T> BindSyncedEntry<T>(
         this ConfigFile configFile,
         ConfigDefinition definition,
@@ -81,6 +85,7 @@ public static class Extensions {
     /// <summary>
     /// Converts this entry into a serializable alternative, allowing it to be synced.
     /// </summary>
+    [Obsolete($"Use {nameof(SyncedBindingExtensions)} instead.")]
     public static SyncedEntry<T> ToSyncedEntry<T>(this ConfigEntry<T> entry)
     {
         return SyncedBindingExtensions.ToSyncedEntry(entry);
