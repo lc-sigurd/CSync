@@ -1,7 +1,7 @@
 using BepInEx.Configuration;
 using CSync.Lib;
 
-namespace CSync.Util;
+namespace CSync.Extensions;
 
 /// <summary>
 /// Contains helpful extension methods to aid with synchronization and reduce code duplication.

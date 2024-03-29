@@ -1,7 +1,7 @@
 using BepInEx.Configuration;
 using CSync.Lib;
 
-namespace CSync.Util;
+namespace CSync.Extensions;
 
 internal static class ConfigDefinitionExtensions
 {

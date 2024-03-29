@@ -1,5 +1,6 @@
 using System.IO;
 using BepInEx.Configuration;
+using CSync.Extensions;
 using CSync.Util;
 
 namespace CSync.Lib;

@@ -2,7 +2,7 @@ using System.IO;
 using BepInEx;
 using BepInEx.Configuration;
 
-namespace CSync.Util;
+namespace CSync.Extensions;
 
 internal static class ConfigFileExtensions
 {
