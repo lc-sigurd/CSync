@@ -9,7 +9,7 @@
       ]
     },
     "evaisa.netcodepatcher.cli": {
-      "version": "4.1.1",
+      "version": "4.2.0",
       "commands": [
         "netcode-patch"
       ]
