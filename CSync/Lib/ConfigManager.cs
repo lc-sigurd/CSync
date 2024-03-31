@@ -2,6 +2,7 @@ using System;
 using BepInEx.Configuration;
 using BepInEx;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -93,5 +94,13 @@ public class ConfigManager {
 
     [UsedImplicitly]
     [Serializable]
-    public readonly record struct InstanceKey(string Guid, string AssemblyQualifiedName);
+    [SuppressMessage("ReSharper", "Unity.RedundantSerializeFieldAttribute")] // they are *not* redundant!
+    public readonly record struct InstanceKey(string Guid, string AssemblyQualifiedName)
+    {
+        [field: SerializeField]
+        public string Guid { get; }
+
+        [field: SerializeField]
+        public string AssemblyQualifiedName { get; }
+    }
 }
