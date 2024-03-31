@@ -26,7 +26,7 @@ public class SyncedConfig<T> : SyncedInstance<T>, ISyncedConfig where T : Synced
     /// </summary>
     public string GUID { get; }
 
-    private void PopulateEntryContainer()
+    internal void PopulateEntryContainer()
     {
         var fields = AccessTools.GetDeclaredFields(typeof(T))
             .Where(field => field.GetCustomAttribute<DataMemberAttribute>() is not null)
