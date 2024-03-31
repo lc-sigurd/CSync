@@ -10,11 +10,11 @@ namespace CSync.Lib;
 public class ConfigSyncBehaviour : NetworkBehaviour
 {
     [field: SerializeField]
-    public string ConfigGuid { get; internal set; }
+    internal ConfigManager.InstanceKey ConfigInstanceKey { get; set; }
 
     private ISyncedConfig? Config {
         get {
-            var success = ConfigManager.Instances.TryGetValue(ConfigGuid, out var config);
+            var success = ConfigManager.Instances.TryGetValue(ConfigInstanceKey, out var config);
             return success ? config : null;
         }
     }
