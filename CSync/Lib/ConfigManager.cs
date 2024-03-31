@@ -16,6 +16,7 @@ namespace CSync.Lib;
 /// Helper class enabling the user to easily setup CSync.<br></br>
 /// Handles config registration, instance syncing and caching of BepInEx files.<br></br>
 /// </summary>
+[PublicAPI]
 public class ConfigManager {
     internal static readonly Dictionary<string, ConfigFile> FileCache = [];
     internal static readonly Dictionary<InstanceKey, ISyncedConfig> Instances = [];
