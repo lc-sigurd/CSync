@@ -6,6 +6,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using CSync.Extensions;
+using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -17,7 +18,7 @@ namespace CSync.Lib;
 /// </summary>
 public class ConfigManager {
     internal static readonly Dictionary<string, ConfigFile> FileCache = [];
-    internal static readonly Dictionary<string, ISyncedConfig> Instances = [];
+    internal static readonly Dictionary<InstanceKey, ISyncedConfig> Instances = [];
 
     private static readonly Lazy<GameObject> LazyPrefab;
     internal static GameObject Prefab => LazyPrefab.Value;
@@ -69,16 +70,21 @@ public class ConfigManager {
             throw new ArgumentNullException(nameof(config), "Config instance is null, cannot register.");
         }
 
-        string guid = config.GUID;
+        var assemblyQualifiedTypeName = typeof(T).AssemblyQualifiedName ?? throw new ArgumentException(nameof(config));
+        var key = new InstanceKey(config.GUID, assemblyQualifiedTypeName);
 
         try {
-            Instances.Add(guid, config);
+            Instances.Add(key, config);
         }
         catch (ArgumentException exc) {
-            throw new InvalidOperationException($"Attempted to register config `{guid}`, but it has already been registered.", exc);
+            throw new InvalidOperationException($"Attempted to register config instance of type `{typeof(T)}`, but an instance has already been registered.", exc);
         }
 
         var syncBehaviour = Prefab.AddComponent<ConfigSyncBehaviour>();
-        syncBehaviour.ConfigGuid = config.GUID;
+        syncBehaviour.ConfigInstanceKey = key;
     }
+
+    [UsedImplicitly]
+    [Serializable]
+    internal readonly record struct InstanceKey(string Guid, string AssemblyQualifiedName);
 }
