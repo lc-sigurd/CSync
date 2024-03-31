@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -15,30 +14,6 @@ namespace CSync.Lib;
 public class SyncedConfig<T> : SyncedInstance<T>, ISyncedConfig where T : SyncedConfig<T>
 {
     public ISyncedEntryContainer EntryContainer { get; } = new SyncedEntryContainer();
-
-    static SyncedConfig()
-    {
-        var constructors = AccessTools.GetDeclaredConstructors(typeof(T));
-
-        ConstructorInfo constructor;
-        try
-        {
-            constructor = constructors.Single();
-        }
-        catch (InvalidOperationException exc)
-        {
-            throw new InvalidOperationException($"{typeof(T).Name} declares {constructors.Count} constructors. SyncedConfig subclasses must declare exactly one constructor.", exc);
-        }
-
-        Plugin.Patcher.Patch(constructor, postfix: new HarmonyMethod(AccessTools.Method(typeof(SyncedConfig<T>), nameof(PostConstructor))));
-    }
-
-    [HarmonyPostfix]
-    [UsedImplicitly]
-    static void PostConstructor(T __instance)
-    {
-        __instance.PopulateEntryContainer();
-    }
 
     public SyncedConfig(string guid)
     {
