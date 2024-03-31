@@ -93,5 +93,5 @@ public class ConfigManager {
 
     [UsedImplicitly]
     [Serializable]
-    internal readonly record struct InstanceKey(string Guid, string AssemblyQualifiedName);
+    public readonly record struct InstanceKey(string Guid, string AssemblyQualifiedName);
 }
