@@ -20,6 +20,9 @@ public class ConfigManager {
     internal static readonly Dictionary<string, ConfigFile> FileCache = [];
     internal static readonly Dictionary<InstanceKey, ISyncedConfig> Instances = [];
 
+    private static event Action? OnPopulateEntriesRequested;
+    internal static void PopulateEntries() => OnPopulateEntriesRequested?.Invoke();
+
     private static readonly Lazy<GameObject> LazyPrefab;
     internal static GameObject Prefab => LazyPrefab.Value;
 
@@ -79,6 +82,9 @@ public class ConfigManager {
         catch (ArgumentException exc) {
             throw new InvalidOperationException($"Attempted to register config instance of type `{typeof(T)}`, but an instance has already been registered.", exc);
         }
+
+        config.Instance = config;
+        OnPopulateEntriesRequested += config.PopulateEntryContainer;
 
         var syncBehaviour = Prefab.AddComponent<ConfigSyncBehaviour>();
         syncBehaviour.ConfigInstanceKey = key;
