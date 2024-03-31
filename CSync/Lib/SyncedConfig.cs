@@ -11,6 +11,7 @@ namespace CSync.Lib;
 /// Wrapper class allowing the config class (type parameter) to be synchronized.<br></br>
 /// Stores the mod's unique identifier and handles registering and sending of named messages.
 /// </summary>
+[PublicAPI]
 public class SyncedConfig<T> : SyncedInstance<T>, ISyncedConfig where T : SyncedConfig<T>
 {
     public ISyncedEntryContainer EntryContainer { get; } = new SyncedEntryContainer();
