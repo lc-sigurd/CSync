@@ -28,7 +28,7 @@ public class ConfigSyncBehaviour : NetworkBehaviour
         set => _syncEnabled.Value = value;
     }
 
-    private readonly NetworkVariable<bool> _syncEnabled = new() { Value = true };
+    private readonly NetworkVariable<bool> _syncEnabled = new();
     private NetworkList<SyncedEntryDelta> _deltas = null!;
 
     [MemberNotNull(nameof(EntryContainer))]
@@ -50,6 +50,8 @@ public class ConfigSyncBehaviour : NetworkBehaviour
 
         if (IsServer)
         {
+            _syncEnabled.Value = true;
+ 
             foreach (var syncedEntryBase in EntryContainer.Values)
             {
                 var currentIndex = _deltas.Count;
