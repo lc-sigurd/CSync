@@ -18,8 +18,6 @@ public static class StartOfRoundPatch
     {
         if (!__instance.IsOwner) return;
 
-        ConfigManager.PopulateEntries();
-
         try {
             var configManagerGameObject = Object.Instantiate(ConfigManager.Prefab, __instance.transform);
             configManagerGameObject.hideFlags = HideFlags.None;
