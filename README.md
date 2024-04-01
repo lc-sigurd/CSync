@@ -13,7 +13,7 @@ This library will help you force clients to have the same settings as the host!
 > - This is **NOT** a standalone mod, it is intended for mod developers and does nothing on its own!<br>
 > - This does **NOT** edit or replace config files directly, everything is done in-memory.<br>
 > - It will **NOT** sync configs from mods that aren't dependent upon it.<br>
-> - CSync uses Unity's Named Messages to avoid **Netcode Patcher** and **NetworkBehaviour**.
+> - CSync uses Unity Netcode's **NetworkBehaviour** with **NetworkList** to sync values.
 
 ## Disclaimer
 
@@ -21,10 +21,10 @@ This project is a **fork** of the [original CSync project](https://github.com/Ow
 [@Owen3H](https://github.com/Owen3H).
 
 ## Features
-- Can serialize a `ConfigEntry` with a drop-in replacement. (`SyncedEntry`)
-- No seperate config file system, retains BepInEx support.
-- Uses `DataContractSerializer`, a fast and safer alternative to `BinaryFormatter`.
-- Provides helpful extension methods.
+- A serializable, drop-in replacement for `ConfigEntry`: `SyncedEntry`
+- No seperate config file system, retains BepInEx support
+- Uses `TomlTypeConverter`, the same system used by BepInEx to save/load values to/from config files
+- Provides extension methods for conveniently binding `SyncedEntry` instances
 
 ## Setup & Usage
 A guide to both setting up and using CSync is available on [Lethal Wiki](https://lethal.wiki/dev/apis/csync).
