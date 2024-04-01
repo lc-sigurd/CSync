@@ -1,5 +1,6 @@
 using System;
 using BepInEx.Configuration;
+using JetBrains.Annotations;
 
 namespace CSync.Lib;
 
@@ -7,6 +8,7 @@ namespace CSync.Lib;
 /// Wrapper class around a BepInEx <see cref="ConfigEntry{T}"/>.<br>
 /// Can serialize and deserialize itself to avoid runtime errors when syncing configs.</br>
 /// </summary>
+[PublicAPI]
 public sealed class SyncedEntry<T> : SyncedEntryBase
 {
     private ConfigEntry<T> _entry;
