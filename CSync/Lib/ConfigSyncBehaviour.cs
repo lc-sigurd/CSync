@@ -139,7 +139,7 @@ public class ConfigSyncBehaviour : NetworkBehaviour
     {
         EnsureEntryContainer();
         try {
-EntryContainer[delta.SyncedEntryIdentifier];
+            var entry = EntryContainer[delta.SyncedEntryIdentifier];
             entry.BoxedValueOverride = entry.BoxedEntry.DefaultValue;
         }
         catch (KeyNotFoundException) { }
