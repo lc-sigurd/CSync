@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -38,4 +39,7 @@ public class SyncedConfig<T> : SyncedInstance<T>, ISyncedConfig where T : Synced
             EntryContainer.Add(entryBase.BoxedEntry.ToSyncedEntryIdentifier(), entryBase);
         }
     }
+
+    public event EventHandler? InitialSyncCompleted;
+    internal void OnInitialSyncCompleted(object sender, EventArgs e) => InitialSyncCompleted?.Invoke(sender, e);
 }
