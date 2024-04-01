@@ -51,4 +51,10 @@ internal struct SyncedEntryDelta : INetworkSerializable, IEquatable<SyncedEntryD
     {
         return HashCode.Combine(Definition, ConfigFileRelativePath, SerializedValue);
     }
+
+    public (string ConfigFileRelativePath, SyncedConfigDefinition Definition) SyncedEntryIdentifier {
+        get {
+            return (ConfigFileRelativePath.Value, Definition);
+        }
+    }
 }
