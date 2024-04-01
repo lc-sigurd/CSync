@@ -14,9 +14,9 @@ namespace CSync;
 /// </summary>
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin {
-    internal static new ManualLogSource Logger { get; private set; }
+    internal new static ManualLogSource Logger { get; private set; } = null!;
 
-    Harmony Patcher;
+    internal static Harmony Patcher = null!;
 
     private void Awake() {
         Logger = base.Logger;

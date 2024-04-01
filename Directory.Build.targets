@@ -13,4 +13,8 @@
             <ThunderstorePackageVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</ThunderstorePackageVersion>
         </PropertyGroup>
     </Target>
+
+    <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
+        <Exec Command="dotnet netcode-patch -nv 1.5.2 &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')"/>
+    </Target>
 </Project>
