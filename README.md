@@ -2,6 +2,7 @@
 
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/lc-sigurd/CSync/build.yml?style=for-the-badge&logo=github)](https://github.com/lc-sigurd/CSync/actions/workflows/build.yml)
 [![Release Version](https://img.shields.io/github/v/release/lc-sigurd/CSync?style=for-the-badge&logo=github)](https://github.com/lc-sigurd/CSync/releases)
+[![NuGet Version](https://img.shields.io/nuget/v/Sigurd.BepInEx.CSync?style=for-the-badge&logo=nuget)](https://nuget.org/packages/Sigurd.BepInEx.CSync)
 [![Thunderstore Version](https://img.shields.io/thunderstore/v/Sigurd/CSync?style=for-the-badge&logo=thunderstore&logoColor=white)](https://thunderstore.io/c/lethal-company/p/Sigurd/CSync/)
 [![Thunderstore Downloads](https://img.shields.io/thunderstore/dt/Sigurd/CSync?style=for-the-badge&logo=thunderstore&logoColor=white)](https://thunderstore.io/c/lethal-company/p/Sigurd/CSync/)
 
