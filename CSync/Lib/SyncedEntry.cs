@@ -9,13 +9,85 @@ namespace CSync.Lib;
 /// </summary>
 public sealed class SyncedEntry<T> : SyncedEntryBase
 {
-    public ConfigEntry<T> Entry { get; private set; }
+    private ConfigEntry<T> _entry;
 
-    public override ConfigEntryBase BoxedEntry
-    {
-        get => Entry;
-        protected init => Entry = (ConfigEntry<T>) value;
+    public ConfigEntry<T> Entry {
+        get => _entry;
+        init {
+            _entry = value;
+            _lastLocalValue = _entry.Value;
+            Entry.SettingChanged += OnLocalSettingChanged;
+        }
     }
+
+    public override ConfigEntryBase BoxedEntry {
+        get => Entry;
+        protected init => Entry = (ConfigEntry<T>)value;
+    }
+
+    public override bool ValueOverridden {
+        get => base.ValueOverridden;
+        internal set
+        {
+            if (value == base.ValueOverridden) return;
+
+            var lastValue = Value;
+            base.ValueOverridden = value;
+            OnValueOverriddenChanged(this, lastValue);
+        }
+    }
+
+    private void OnLocalSettingChanged(object sender, EventArgs e)
+    {
+        InvokeChangedIfNecessary();
+        _lastLocalValue = LocalValue;
+        return;
+
+        void InvokeChangedIfNecessary()
+        {
+            if (ValueOverridden) return;
+            if (Equals(_lastLocalValue, LocalValue)) return;
+
+            var args = new SyncedSettingChangedEventArgs<T>
+            {
+                OldValue = _lastLocalValue,
+                NewValue = LocalValue,
+                ChangedEntry = this,
+            };
+            Changed?.Invoke(sender, args);
+        }
+    }
+
+    private void OnValueOverrideChanged(object sender, T oldValue)
+    {
+        if (!ValueOverridden) return;
+        if (Equals(oldValue, _typedValueOverride)) return;
+
+        var args = new SyncedSettingChangedEventArgs<T>
+        {
+            OldValue = oldValue,
+            NewValue = _typedValueOverride,
+            ChangedEntry = this,
+        };
+        Changed?.Invoke(sender, args);
+    }
+
+    private void OnValueOverriddenChanged(object sender, T oldValue)
+    {
+        if (Equals(Value, oldValue)) return;
+
+        var args = new SyncedSettingChangedEventArgs<T>
+        {
+            OldValue = oldValue,
+            NewValue = Value,
+            ChangedEntry = this,
+        };
+        Changed?.Invoke(sender, args);
+    }
+
+    public event EventHandler<SyncedSettingChangedEventArgs<T>>? Changed;
+
+    private T _lastLocalValue;
 
     public T LocalValue
     {
@@ -28,7 +100,12 @@ public sealed class SyncedEntry<T> : SyncedEntryBase
     public override object? BoxedValueOverride
     {
         get => _typedValueOverride;
-        set => _typedValueOverride = (T) value!;
+        set
+        {
+            var lastValue = Value;
+            _typedValueOverride = (T)value!;
+            OnValueOverrideChanged(this, lastValue);
+        }
     }
 
     public T Value {
@@ -39,11 +116,6 @@ public sealed class SyncedEntry<T> : SyncedEntryBase
     }
 
     public static implicit operator T(SyncedEntry<T> e) => e.Value;
-
-    public event EventHandler SettingChanged {
-        add => Entry.SettingChanged += value;
-        remove => Entry.SettingChanged -= value;
-    }
 
     public SyncedEntry(ConfigEntry<T> entry) : base(entry) { }
 
