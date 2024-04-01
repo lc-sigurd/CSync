@@ -16,10 +16,11 @@ public static class StartOfRoundPatch
     [HarmonyPostfix]
     public static void OnSessionStart(StartOfRound __instance)
     {
+        ConfigManager.PopulateEntries();
+
         if (!__instance.IsOwner) return;
 
         try {
-            ConfigManager.PopulateEntries();
             var configManagerGameObject = Object.Instantiate(ConfigManager.Prefab, __instance.transform);
             configManagerGameObject.hideFlags = HideFlags.None;
             configManagerGameObject.GetComponent<NetworkObject>().Spawn();
