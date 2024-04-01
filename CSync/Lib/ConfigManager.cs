@@ -85,7 +85,7 @@ public class ConfigManager {
             throw new InvalidOperationException($"Attempted to register config instance of type `{typeof(T)}`, but an instance has already been registered.", exc);
         }
 
-        config.Instance = config;
+        SyncedInstance<T>.Instance = config;
         OnPopulateEntriesRequested += config.PopulateEntryContainer;
 
         var syncBehaviour = Prefab.AddComponent<ConfigSyncBehaviour>();
