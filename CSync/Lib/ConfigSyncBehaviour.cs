@@ -19,6 +19,13 @@ public class ConfigSyncBehaviour : NetworkBehaviour
         }
     }
 
+    private EventHandler? InitialSyncCompletedHandler {
+        get {
+            var success = ConfigManager.InitialSyncHandlers.TryGetValue(ConfigInstanceKey, out var handler);
+            return success ? handler : null;
+        }
+    }
+
     private ISyncedEntryContainer? _entryContainer;
     internal ISyncedEntryContainer? EntryContainer => _entryContainer ??= Config?.EntryContainer;
 
@@ -51,7 +58,7 @@ public class ConfigSyncBehaviour : NetworkBehaviour
         if (IsServer)
         {
             _syncEnabled.Value = true;
- 
+
             foreach (var syncedEntryBase in EntryContainer.Values)
             {
                 var currentIndex = _deltas.Count;
@@ -64,6 +71,7 @@ public class ConfigSyncBehaviour : NetworkBehaviour
                 };
             }
 
+            InitialSyncCompletedHandler?.Invoke(this, EventArgs.Empty);
             return;
         }
 
@@ -78,6 +86,8 @@ public class ConfigSyncBehaviour : NetworkBehaviour
             }
 
             if (_syncEnabled.Value) EnableOverrides();
+
+            InitialSyncCompletedHandler?.Invoke(this, EventArgs.Empty);
         }
     }
 
