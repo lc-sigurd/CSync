@@ -86,7 +86,7 @@ public class ConfigManager {
         }
 
         SyncedInstance<T>.Instance = config;
-        SycedInstance<T>.Default = config;
+        SyncedInstance<T>.Default = config;
         OnPopulateEntriesRequested += config.PopulateEntryContainer;
 
         var syncBehaviour = Prefab.AddComponent<ConfigSyncBehaviour>();
