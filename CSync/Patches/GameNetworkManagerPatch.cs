@@ -13,9 +13,10 @@ public static class GameNetworkManagerPatch
     [HarmonyPostfix]
     public static void OnNetworkManagerStart(GameNetworkManager __instance)
     {
+        ConfigManager.PopulateEntries();
+
         if (NetworkManager.Singleton.NetworkConfig.Prefabs.Contains(ConfigManager.Prefab))
             return;
-
         NetworkManager.Singleton.AddNetworkPrefab(ConfigManager.Prefab);
     }
 }
