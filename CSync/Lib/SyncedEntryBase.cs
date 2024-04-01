@@ -1,4 +1,4 @@
-using System.IO;
+using System;
 using BepInEx.Configuration;
 using CSync.Extensions;
 
@@ -13,7 +13,7 @@ public abstract class SyncedEntryBase
 
     internal SyncedEntryBase(ConfigEntryBase configEntry)
     {
-        BoxedEntry = configEntry;
+        BoxedEntry = configEntry ?? throw new ArgumentNullException(nameof(configEntry));
         BoxedValueOverride = configEntry.DefaultValue;
     }
 
