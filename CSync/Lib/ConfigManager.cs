@@ -21,6 +21,7 @@ namespace CSync.Lib;
 public class ConfigManager {
     internal static readonly Dictionary<string, ConfigFile> FileCache = [];
     internal static readonly Dictionary<InstanceKey, ISyncedConfig> Instances = [];
+    internal static readonly Dictionary<InstanceKey, EventHandler> InitialSyncHandlers = [];
 
     private static event Action? OnPopulateEntriesRequested;
     internal static void PopulateEntries() => OnPopulateEntriesRequested?.Invoke();
@@ -80,6 +81,7 @@ public class ConfigManager {
 
         try {
             Instances.Add(key, config);
+            InitialSyncHandlers.Add(key, config.OnInitialSyncCompleted);
         }
         catch (ArgumentException exc) {
             throw new InvalidOperationException($"Attempted to register config instance of type `{typeof(T)}`, but an instance has already been registered.", exc);
