@@ -9,7 +9,7 @@ public abstract class SyncedEntryBase
     public abstract ConfigEntryBase BoxedEntry { get; protected init; }
 
     public abstract object? BoxedValueOverride { get; set; }
-    public bool ValueOverridden { get; internal set; } = false;
+    public virtual bool ValueOverridden { get; internal set; } = false;
 
     internal SyncedEntryBase(ConfigEntryBase configEntry)
     {
