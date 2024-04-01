@@ -23,7 +23,7 @@ public abstract class SyncedEntryBase
     }
 
     internal SyncedEntryDelta ToDelta() => new SyncedEntryDelta(
-        configFileRelativePath: Path.GetFileName(BoxedEntry.ConfigFile.ConfigFilePath),
+        configFileRelativePath: BoxedEntry.ConfigFile.GetConfigFileRelativePath(),
         definition: BoxedEntry.Definition.ToSynced(),
         serializedValue: BoxedEntry.GetSerializedValue()
     );
