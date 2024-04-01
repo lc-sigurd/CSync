@@ -139,7 +139,7 @@ public class ConfigSyncBehaviour : NetworkBehaviour
     {
         EnsureEntryContainer();
         try {
-            var entry = EntryContainer[(delta.ConfigFileRelativePath.Value, delta.Definition)];
+EntryContainer[delta.SyncedEntryIdentifier];
             entry.BoxedValueOverride = entry.BoxedEntry.DefaultValue;
         }
         catch (KeyNotFoundException) { }
@@ -149,7 +149,7 @@ public class ConfigSyncBehaviour : NetworkBehaviour
     {
         EnsureEntryContainer();
         try {
-            var entry = EntryContainer[(delta.ConfigFileRelativePath.Value, delta.Definition)];
+            var entry = EntryContainer[delta.SyncedEntryIdentifier];
             entry.SetSerializedValueOverride(delta.SerializedValue.Value);
         }
         catch (KeyNotFoundException) {
