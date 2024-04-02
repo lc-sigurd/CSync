@@ -14,6 +14,7 @@ namespace CSync.Lib;
 /// Stores the mod's unique identifier and handles registering and sending of named messages.
 /// </summary>
 [PublicAPI]
+[Obsolete("Obsolete, use SyncedConfig2")]
 public class SyncedConfig<T> : SyncedInstance<T>, ISyncedConfig where T : SyncedConfig<T>
 {
     public ISyncedEntryContainer EntryContainer { get; } = new SyncedEntryContainer();
