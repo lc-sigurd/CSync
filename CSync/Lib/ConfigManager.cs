@@ -97,13 +97,20 @@ public class ConfigManager {
 
     [UsedImplicitly]
     [Serializable]
-    [SuppressMessage("ReSharper", "Unity.RedundantSerializeFieldAttribute")] // they are *not* redundant!
-    public readonly record struct InstanceKey(string Guid, string AssemblyQualifiedName)
+    public record struct InstanceKey
     {
-        [field: SerializeField]
-        public string Guid { get; }
+        public InstanceKey(string guid, string assemblyQualifiedName)
+        {
+            _guid = guid;
+            _assemblyQualifiedName = assemblyQualifiedName;
+        }
 
-        [field: SerializeField]
-        public string AssemblyQualifiedName { get; }
+        [SerializeField]
+        private string _guid;
+        [SerializeField]
+        private string _assemblyQualifiedName;
+
+        public string Guid => _guid;
+        public string AssemblyQualifiedName => _assemblyQualifiedName;
     }
 }
