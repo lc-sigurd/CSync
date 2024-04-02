@@ -70,10 +70,24 @@ public static class ConfigManager {
     /// Register a config with CSync, making it responsible for synchronization.<br></br>
     /// After calling this method, all clients will receive the host's config upon joining.
     /// </summary>
+    [Obsolete("Obsolete, use SyncedConfig2")]
     public static void Register<T>(T config) where T : SyncedConfig<T> {
+        Register(config as SyncedConfig<T>);
+    }
+
+    /// <summary>
+    /// Register a config with CSync, making it responsible for synchronization.<br></br>
+    /// After calling this method, all clients will receive the host's config upon joining.
+    /// </summary>
+    [Obsolete("Obsolete, use SyncedConfig2")]
+    public static void Register<T>(SyncedConfig<T> config) where T : SyncedConfig<T> {
         if (config is null)
         {
             throw new ArgumentNullException(nameof(config), "Config instance is null, cannot register.");
+        }
+        if (config is not T)
+        {
+            throw new ArgumentException($"{config.GetType()} declares it extends {nameof(SyncedConfig<T>)}<{typeof(T)}>. It should be declared to extend {nameof(SyncedConfig<T>)}<{config.GetType()}>.", nameof(config));
         }
 
         var assemblyQualifiedTypeName = typeof(T).AssemblyQualifiedName ?? throw new ArgumentException(nameof(config));
@@ -84,14 +98,47 @@ public static class ConfigManager {
             InitialSyncHandlers.Add(key, config.OnInitialSyncCompleted);
         }
         catch (ArgumentException exc) {
-            throw new InvalidOperationException($"Attempted to register config instance of type `{typeof(T)}`, but an instance has already been registered.", exc);
+            throw new InvalidOperationException($"Attempted to register config instance of type `{typeof(T)}`, but an instance has already been registered with key {key}.", exc);
         }
 
         Plugin.Logger.LogDebug($"Successfully registered config instance {key}.");
 
-        SyncedInstance<T>.Instance = config;
-        SyncedInstance<T>.Default = config;
+        SyncedInstance<T>.Instance = (T)config;
+        SyncedInstance<T>.Default = (T)config;
         OnPopulateEntriesRequested += config.PopulateEntryContainer;
+
+        var syncBehaviour = Prefab.AddComponent<ConfigSyncBehaviour>();
+        syncBehaviour.ConfigInstanceKey = key;
+    }
+
+    /// <summary>
+    /// Register a config with CSync, making it responsible for synchronization.<br></br>
+    /// After calling this method, all clients will receive the host's config upon joining.
+    /// </summary>
+    public static void Register<T>(SyncedConfig2<T> config) where T : SyncedConfig2<T>
+    {
+        if (config is null)
+        {
+            throw new ArgumentNullException(nameof(config), "Config instance is null, cannot register.");
+        }
+        if (config is not T)
+        {
+            throw new ArgumentException($"{config.GetType()} declares it extends {nameof(SyncedConfig2<T>)}<{typeof(T)}>. It should be declared to extend {nameof(SyncedConfig2<T>)}<{config.GetType()}>.", nameof(config));
+        }
+
+        var assemblyQualifiedTypeName = typeof(T).AssemblyQualifiedName ?? throw new ArgumentException(nameof(config));
+        var key = new InstanceKey(config.GUID, assemblyQualifiedTypeName);
+
+        try {
+            Instances.Add(key, config);
+            InitialSyncHandlers.Add(key, config.OnInitialSyncCompleted);
+        }
+        catch (ArgumentException exc) {
+            throw new InvalidOperationException($"Attempted to register config instance of type `{typeof(T)}`, but an instance has already been registered with key {key}.", exc);
+        }
+
+        config.PopulateEntryContainer();
+        Plugin.Logger.LogDebug($"Successfully registered config instance {key}.");
 
         var syncBehaviour = Prefab.AddComponent<ConfigSyncBehaviour>();
         syncBehaviour.ConfigInstanceKey = key;
