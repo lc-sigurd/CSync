@@ -42,6 +42,7 @@
 
     <ItemGroup>
         <ThunderstoreBuildCopyPath Include="$(TargetPath)" Destination="BepInEx/plugins/$(ProjectName)/"/>
+        <ThunderstoreDependency Include="Evaisa-FixPluginTypesSerialization" Version="1.1.1" />
     </ItemGroup>
 
     <ItemGroup>
