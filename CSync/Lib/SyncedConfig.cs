@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+using System.Threading;
 using CSync.Extensions;
 using HarmonyLib;
 using JetBrains.Annotations;
@@ -16,6 +17,7 @@ namespace CSync.Lib;
 public class SyncedConfig<T> : SyncedInstance<T>, ISyncedConfig where T : SyncedConfig<T>
 {
     public ISyncedEntryContainer EntryContainer { get; } = new SyncedEntryContainer();
+    private int _entryContainerPopulated = 0;
 
     public SyncedConfig(string guid)
     {
@@ -36,6 +38,7 @@ public class SyncedConfig<T> : SyncedInstance<T>, ISyncedConfig where T : Synced
 
     internal void PopulateEntryContainer()
     {
+        if (Interlocked.Exchange(ref _entryContainerPopulated, 1) != 0) return;
         foreach (var fieldInfo in SyncedEntryFields.Value)
         {
             var entryBase = (SyncedEntryBase)fieldInfo.GetValue(this);
