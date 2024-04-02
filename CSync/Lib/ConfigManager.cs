@@ -87,6 +87,8 @@ public class ConfigManager {
             throw new InvalidOperationException($"Attempted to register config instance of type `{typeof(T)}`, but an instance has already been registered.", exc);
         }
 
+        Plugin.Logger.LogDebug($"Successfully registered config instance {key}.");
+
         SyncedInstance<T>.Instance = config;
         SyncedInstance<T>.Default = config;
         OnPopulateEntriesRequested += config.PopulateEntryContainer;
