@@ -27,13 +27,16 @@ public class SyncedConfig<T> : SyncedInstance<T>, ISyncedConfig where T : Synced
     /// </summary>
     public string GUID { get; }
 
+    private static Lazy<FieldInfo[]> SyncedEntryFields = new(
+        () => AccessTools.GetDeclaredFields(typeof(T))
+            .Where(field => field.GetCustomAttribute<DataMemberAttribute>() is not null)
+            .Where(field => typeof(SyncedEntryBase).IsAssignableFrom(field.FieldType))
+            .ToArray()
+    );
+
     internal void PopulateEntryContainer()
     {
-        var fields = AccessTools.GetDeclaredFields(typeof(T))
-            .Where(field => field.GetCustomAttribute<DataMemberAttribute>() is not null)
-            .Where(field => typeof(SyncedEntryBase).IsAssignableFrom(field.FieldType));
-
-        foreach (var fieldInfo in fields)
+        foreach (var fieldInfo in SyncedEntryFields.Value)
         {
             var entryBase = (SyncedEntryBase)fieldInfo.GetValue(this);
             EntryContainer.Add(entryBase.BoxedEntry.ToSyncedEntryIdentifier(), entryBase);
