@@ -161,6 +161,7 @@ public class ConfigSyncBehaviour : NetworkBehaviour
         try {
             var entry = EntryContainer[delta.SyncedEntryIdentifier];
             entry.SetSerializedValueOverride(delta.SerializedValue.Value);
+            entry.ValueOverridden = delta.SyncEnabled && SyncEnabled;
         }
         catch (KeyNotFoundException) {
             Plugin.Logger.Log(LogLevel.Warning, $"Setting \"{delta.Definition}\" could not be found, so its synced value override will be ignored.");
@@ -173,9 +174,15 @@ public class ConfigSyncBehaviour : NetworkBehaviour
     private void EnableOverrides()
     {
         EnsureEntryContainer();
-        foreach (var syncedEntryBase in EntryContainer.Values)
+        foreach (var delta in _deltas)
         {
-            syncedEntryBase.ValueOverridden = true;
+            try {
+                var entry = EntryContainer[delta.SyncedEntryIdentifier];
+                entry.ValueOverridden = delta.SyncEnabled;
+            }
+            catch (KeyNotFoundException) {
+                Plugin.Logger.Log(LogLevel.Warning, $"Setting \"{delta.Definition}\" could not be found, so its value override could not be enabled.");
+            }
         }
     }
 
