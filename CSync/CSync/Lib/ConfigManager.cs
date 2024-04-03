@@ -2,7 +2,6 @@ using System;
 using BepInEx.Configuration;
 using BepInEx;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
