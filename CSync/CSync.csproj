@@ -8,7 +8,7 @@
             https://nuget.bepinex.dev/v3/index.json;
             https://nuget.samboy.dev/v3/index.json
         </RestoreAdditionalProjectSources>
-        <RootNamespace>CSync</RootNamespace>
+        <RootNamespace></RootNamespace>
         <Title>CSync</Title>
         <Product>$(Title)</Product>
         <NeutralLanguage>en-GB</NeutralLanguage>
