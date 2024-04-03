@@ -9,12 +9,18 @@ internal struct SyncedEntryDelta : INetworkSerializable, IEquatable<SyncedEntryD
     public SyncedConfigDefinition Definition;
     public FixedString128Bytes ConfigFileRelativePath;
     public FixedString512Bytes SerializedValue;
+    public bool SyncEnabled;
 
-    public SyncedEntryDelta(FixedString128Bytes configFileRelativePath, SyncedConfigDefinition definition, FixedString512Bytes serializedValue)
-    {
+    public SyncedEntryDelta(
+        FixedString128Bytes configFileRelativePath,
+        SyncedConfigDefinition definition,
+        FixedString512Bytes serializedValue,
+        bool syncEnabled
+    ) {
         ConfigFileRelativePath = configFileRelativePath;
         Definition = definition;
         SerializedValue = serializedValue;
+        SyncEnabled = syncEnabled;
     }
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -26,6 +32,7 @@ internal struct SyncedEntryDelta : INetworkSerializable, IEquatable<SyncedEntryD
             var reader = serializer.GetFastBufferReader();
             reader.ReadValueSafe(out ConfigFileRelativePath);
             reader.ReadValueSafe(out SerializedValue);
+            reader.ReadValueSafe(out SyncEnabled);
         }
         else
         {
@@ -34,12 +41,17 @@ internal struct SyncedEntryDelta : INetworkSerializable, IEquatable<SyncedEntryD
             var writer = serializer.GetFastBufferWriter();
             writer.WriteValueSafe(ConfigFileRelativePath);
             writer.WriteValueSafe(SerializedValue);
+            writer.WriteValue(SyncEnabled);
         }
     }
 
     public bool Equals(SyncedEntryDelta other)
     {
-        return Definition.Equals(other.Definition) && ConfigFileRelativePath.Equals(other.ConfigFileRelativePath) && SerializedValue.Equals(other.SerializedValue);
+        if (!Definition.Equals(other.Definition)) return false;
+        if (!ConfigFileRelativePath.Equals(other.ConfigFileRelativePath)) return false;
+        if (!SerializedValue.Equals(other.SerializedValue)) return false;
+        if (!SyncEnabled.Equals(other.SyncEnabled)) return false;
+        return true;
     }
 
     public override bool Equals(object? obj)
@@ -49,12 +61,9 @@ internal struct SyncedEntryDelta : INetworkSerializable, IEquatable<SyncedEntryD
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Definition, ConfigFileRelativePath, SerializedValue);
+        return HashCode.Combine(Definition, ConfigFileRelativePath, SerializedValue, SyncEnabled);
     }
 
-    public (string ConfigFileRelativePath, SyncedConfigDefinition Definition) SyncedEntryIdentifier {
-        get {
-            return (ConfigFileRelativePath.Value, Definition);
-        }
-    }
+    public (string ConfigFileRelativePath, SyncedConfigDefinition Definition) SyncedEntryIdentifier
+        => (ConfigFileRelativePath.Value, Definition);
 }
