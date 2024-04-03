@@ -9,7 +9,17 @@ public abstract class SyncedEntryBase
     public abstract ConfigEntryBase BoxedEntry { get; protected init; }
 
     public abstract object? BoxedValueOverride { get; set; }
-    public virtual bool SyncEnabled { get; set; }
+
+    private bool _syncEnabled;
+    public bool SyncEnabled {
+        get => _syncEnabled;
+        set {
+            if (value == _syncEnabled) return;
+            _syncEnabled = value;
+            SyncEnabledChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
     public virtual bool ValueOverridden { get; internal set; } = false;
 
     internal SyncedEntryBase(ConfigEntryBase configEntry)
@@ -17,6 +27,8 @@ public abstract class SyncedEntryBase
         BoxedEntry = configEntry ?? throw new ArgumentNullException(nameof(configEntry));
         BoxedValueOverride = configEntry.DefaultValue;
     }
+
+    internal event EventHandler? SyncEnabledChanged;
 
     public void SetSerializedValueOverride(string value)
     {

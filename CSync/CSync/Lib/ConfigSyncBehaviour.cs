@@ -69,6 +69,11 @@ public class ConfigSyncBehaviour : NetworkBehaviour
                     if (!ReferenceEquals(syncedEntryBase.BoxedEntry, args.ChangedSetting)) return;
                     _deltas[currentIndex] = syncedEntryBase.ToDelta();
                 };
+
+                syncedEntryBase.SyncEnabledChanged += (_, args) =>
+                {
+                    _deltas[currentIndex] = syncedEntryBase.ToDelta();
+                };
             }
 
             InitialSyncCompletedHandler?.Invoke(this, EventArgs.Empty);
