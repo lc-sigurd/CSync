@@ -38,6 +38,7 @@
         <ThunderstoreDescription>Configuration file syncing library for BepInEx.</ThunderstoreDescription>
         <ThunderstoreIconPath>$(ProjectDir)assets/icons/icon.png</ThunderstoreIconPath>
         <HasBepInPlugin>true</HasBepInPlugin>
+        <PluginRootNamespace>CSync</PluginRootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
