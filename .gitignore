@@ -40,6 +40,11 @@
 /CSync*/[Bb]in
 /CSync*/[Oo]bj
 
+### Example Plugin Project
+!/ExamplePlugin
+/ExamplePlugin/[Bb]in
+/ExamplePlugin/[Oo]bj
+
 # Explicit exceptions/ignores
 **.user
 !**.template.*.user

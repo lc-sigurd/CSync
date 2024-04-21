@@ -5,6 +5,8 @@ VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSync", "CSync/CSync.csproj", "{9B7C1321-3681-40AA-87C9-19904B3F4235}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamplePlugin", "ExamplePlugin\ExamplePlugin.csproj", "{A372064A-9BE2-4382-867D-7ED1CA3FD2D4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{9B7C1321-3681-40AA-87C9-19904B3F4235}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B7C1321-3681-40AA-87C9-19904B3F4235}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B7C1321-3681-40AA-87C9-19904B3F4235}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A372064A-9BE2-4382-867D-7ED1CA3FD2D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A372064A-9BE2-4382-867D-7ED1CA3FD2D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A372064A-9BE2-4382-867D-7ED1CA3FD2D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A372064A-9BE2-4382-867D-7ED1CA3FD2D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
