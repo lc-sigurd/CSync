@@ -3,15 +3,9 @@
         <TargetFramework>netstandard2.1</TargetFramework>
         <AssemblyName>com.sigurd.csync</AssemblyName>
         <Description>Configuration file syncing library for BepInEx.</Description>
-        <RestoreAdditionalProjectSources>
-            https://api.nuget.org/v3/index.json;
-            https://nuget.bepinex.dev/v3/index.json;
-            https://nuget.samboy.dev/v3/index.json
-        </RestoreAdditionalProjectSources>
         <RootNamespace></RootNamespace>
         <Title>CSync</Title>
         <Product>$(Title)</Product>
-        <NeutralLanguage>en-GB</NeutralLanguage>
     </PropertyGroup>
 
     <PropertyGroup>
