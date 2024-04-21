@@ -3,7 +3,7 @@
 
     <!-- Build configurations -->
     <PropertyGroup>
-        <Configurations>Debug;Release</Configurations>
+        <Configurations>Debug;Release;DebugExamplePlugin;ReleaseExamplePlugin</Configurations>
         <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
