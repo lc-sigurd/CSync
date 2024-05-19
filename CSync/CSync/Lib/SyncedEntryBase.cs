@@ -10,7 +10,7 @@ public abstract class SyncedEntryBase
 
     public abstract object? BoxedValueOverride { get; set; }
 
-    private bool _syncEnabled;
+    private bool _syncEnabled = true;
     public bool SyncEnabled {
         get => _syncEnabled;
         set {
