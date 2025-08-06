@@ -11,7 +11,7 @@ public class MySyncedConfig : SyncedConfig2<MySyncedConfig>
 
     public MySyncedConfig(ConfigFile configFile) : base(MyPluginInfo.PLUGIN_GUID)
     {
-        ClimbSpeed = ClimbSpeed = configFile.BindSyncedEntry(
+        ClimbSpeed = configFile.BindSyncedEntry(
             new ConfigDefinition("Movement", "Climb Speed"),
             3.9f,
             new ConfigDescription("The base speed at which the player climbs.")
