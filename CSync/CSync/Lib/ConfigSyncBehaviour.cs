@@ -1,3 +1,4 @@
+using BepInEx.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -37,6 +38,7 @@ public class ConfigSyncBehaviour : NetworkBehaviour
 
     private readonly NetworkVariable<bool> _syncEnabled = new();
     private NetworkList<SyncedEntryDelta> _deltas = null!;
+    private readonly List<SyncedEntryListener> _syncedEntryListeners = new();
 
     [MemberNotNull(nameof(EntryContainer))]
     private void EnsureEntryContainer()
@@ -49,6 +51,42 @@ public class ConfigSyncBehaviour : NetworkBehaviour
     {
         EnsureEntryContainer();
         _deltas = new NetworkList<SyncedEntryDelta>();
+    }
+
+    // Helper class to maintain event subscriptions.
+    // SyncedEntryDelta is a struct which can't be copied around, so it has to be stored by list+index.
+    sealed class SyncedEntryListener : IDisposable
+    {
+        private readonly NetworkList<SyncedEntryDelta> deltas;
+        private readonly int index;
+        private readonly SyncedEntryBase syncedEntryBase;
+
+        public SyncedEntryListener(NetworkList<SyncedEntryDelta> deltas, int index, SyncedEntryBase syncedEntryBase)
+        {
+            this.deltas = deltas;
+            this.index = index;
+            this.syncedEntryBase = syncedEntryBase;
+
+            syncedEntryBase.BoxedEntry.ConfigFile.SettingChanged += OnSettingChanged;
+            syncedEntryBase.SyncEnabledChanged += OnEntrySyncEnabledChanged;
+        }
+
+        public void Dispose()
+        {
+            syncedEntryBase.BoxedEntry.ConfigFile.SettingChanged -= OnSettingChanged;
+            syncedEntryBase.SyncEnabledChanged -= OnEntrySyncEnabledChanged;
+        }
+
+        void OnSettingChanged(object sender, SettingChangedEventArgs args)
+        {
+            if (!ReferenceEquals(syncedEntryBase.BoxedEntry, args.ChangedSetting)) return;
+            deltas[index] = syncedEntryBase.ToDelta();
+        }
+
+        void OnEntrySyncEnabledChanged(object sender, EventArgs args)
+        {
+            deltas[index] = syncedEntryBase.ToDelta();
+        }
     }
 
     public override void OnNetworkSpawn()
@@ -65,17 +103,7 @@ public class ConfigSyncBehaviour : NetworkBehaviour
             {
                 var currentIndex = _deltas.Count;
                 _deltas.Add(syncedEntryBase.ToDelta());
-
-                syncedEntryBase.BoxedEntry.ConfigFile.SettingChanged += (_, args) =>
-                {
-                    if (!ReferenceEquals(syncedEntryBase.BoxedEntry, args.ChangedSetting)) return;
-                    _deltas[currentIndex] = syncedEntryBase.ToDelta();
-                };
-
-                syncedEntryBase.SyncEnabledChanged += (_, args) =>
-                {
-                    _deltas[currentIndex] = syncedEntryBase.ToDelta();
-                };
+                _syncedEntryListeners.Add(new(_deltas, currentIndex, syncedEntryBase));
             }
 
             InitialSyncCompletedHandler?.Invoke(this, EventArgs.Empty);
@@ -98,16 +126,44 @@ public class ConfigSyncBehaviour : NetworkBehaviour
 
     public override void OnNetworkDespawn()
     {
+        EnsureEntryContainer();
+
+        if (IsServer)
+        {
+            foreach (var listener in _syncedEntryListeners)
+            {
+                listener.Dispose();
+            }
+
+            _syncedEntryListeners.Clear();
+
+            // NetworkList and NetworkVariable can not be modified now because the network manager has already shut down.
+            // See https://github.com/Unity-Technologies/com.unity.netcode.gameobjects/pull/3502
+            // The fix applies to NGO 1.14.0+, but Lethal Company v73 is on NGO 1.12.0
+            // Should not be needed anyway, since this component isn't being reused between network sessions.
+            // _deltas.Clear();
+            // _syncEnabled.Value = false;
+        }
+        else if (IsClient)
+        {
+            DisableOverrides();
+
+            foreach (var delta in _deltas)
+            {
+                ResetOverrideValue(delta);
+            }
+
+            _deltas.OnListChanged -= OnClientDeltaListChanged;
+            _syncEnabled.OnValueChanged -= OnSyncEnabledChanged;
+        }
+
         base.OnNetworkDespawn();
     }
 
     public override void OnDestroy()
     {
-        DisableOverrides();
-        foreach (var delta in _deltas)
-        {
-            ResetOverrideValue(delta);
-        }
+        // The content of this method has moved to OnNetworkDespawn.
+        // Keep this method around for ABI compatibility though.
         base.OnDestroy();
     }
 
