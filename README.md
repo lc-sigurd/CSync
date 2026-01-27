@@ -9,11 +9,12 @@
 A BepInEx configuration file syncing library.
 This library will help you force clients to have the same settings as the host!
 
-> [!IMPORTANT]
-> - This is **NOT** a standalone mod, it is intended for mod developers and does nothing on its own!<br>
-> - This does **NOT** edit or replace config files directly, everything is done in-memory.<br>
-> - It will **NOT** sync configs from mods that aren't dependent upon it.<br>
-> - CSync uses Unity Netcode's **NetworkBehaviour** with **NetworkList** to sync values.
+### ⚠️ IMPORTANT
+
+- This is **NOT** a standalone mod, it is intended for mod developers and does nothing on its own!
+- This does **NOT** edit or replace config files directly, everything is done in-memory.
+- It will **NOT** sync configs from mods that aren't dependent upon it.
+- CSync uses Unity Netcode's **NetworkBehaviour** with **NetworkList** to sync values.
 
 ## Disclaimer
 
