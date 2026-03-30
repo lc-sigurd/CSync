@@ -53,6 +53,8 @@ public class ConfigSyncBehaviour : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
+
         EnsureEntryContainer();
 
         if (IsServer)
@@ -77,10 +79,8 @@ public class ConfigSyncBehaviour : NetworkBehaviour
             }
 
             InitialSyncCompletedHandler?.Invoke(this, EventArgs.Empty);
-            return;
         }
-
-        if (IsClient)
+        else if (IsClient)
         {
             _syncEnabled.OnValueChanged += OnSyncEnabledChanged;
             _deltas.OnListChanged += OnClientDeltaListChanged;
@@ -94,6 +94,11 @@ public class ConfigSyncBehaviour : NetworkBehaviour
 
             InitialSyncCompletedHandler?.Invoke(this, EventArgs.Empty);
         }
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
     }
 
     public override void OnDestroy()
